@@ -1,0 +1,3 @@
+[submodule "logic"]
+	path = logic
+	url = https://github.com/tymonx/logic
