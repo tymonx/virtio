@@ -43,3 +43,4 @@ enable_testing()
 
 add_subdirectory(logic)
 add_subdirectory(rtl)
+add_subdirectory(tests)
