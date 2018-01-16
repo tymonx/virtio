@@ -298,6 +298,7 @@ module virtio_available_ring_handler_main #(
     end
 
     always_comb tx.tdest = '0;
+    always_comb tx.tuser = '0;
     always_comb tx.tlast = '1;
     always_comb tx.tkeep = '1;
     always_comb tx.tstrb = '1;
