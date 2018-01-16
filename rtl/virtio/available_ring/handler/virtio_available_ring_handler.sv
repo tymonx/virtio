@@ -15,7 +15,7 @@
 
 `include "logic.svh"
 
-/* Module: virtio_available_ring_handler_main
+/* Module: virtio_available_ring_handler
  *
  * Virtio available ring handler.
  *

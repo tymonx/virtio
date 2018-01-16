@@ -39,11 +39,11 @@ Timestamp: d month year
 # Source Code
 # ------------------------------------------------------------------------
 
-Source Folder: ../logic/include
-   Name: logic-include
+Source Folder: ../logic/rtl/logic
+   Name: logic
 
-Source Folder 2: ../logic/rtl
-   Name: logic-rtl
+Source Folder 2: ../rtl/virtio
+   Name: virtio
 
 
 
