@@ -89,8 +89,41 @@ module virtio_available_ring_handler_unit_test;
         notify.cb_write(data);
     end
     begin
-        byte data[] = new [4];
+        byte data[];
+        request_t request;
+
         tx.cb_read(data, REQUEST_READ_IDX);
+        `FAIL_UNLESS_EQUAL(data.size(), 4)
+
+        data = new [2] ('{16'd63});
+        rx.cb_write(data);
+
+        tx.cb_read(data, REQUEST_READ_IDS);
+        `FAIL_UNLESS_EQUAL(data.size(), 4)
+        request = {<<8{data}};
+        `FAIL_UNLESS_EQUAL(request.offset, 0)
+        `FAIL_UNLESS_EQUAL(request.length, 16)
+
+        tx.cb_read(data, REQUEST_READ_IDS);
+        `FAIL_UNLESS_EQUAL(data.size(), 4)
+        request = {<<8{data}};
+        `FAIL_UNLESS_EQUAL(request.offset, 16)
+        `FAIL_UNLESS_EQUAL(request.length, 16)
+
+        data = new [1];
+        notify.cb_write(data);
+
+        tx.cb_read(data, REQUEST_READ_IDS);
+        `FAIL_UNLESS_EQUAL(data.size(), 4)
+        request = {<<8{data}};
+        `FAIL_UNLESS_EQUAL(request.offset, 32)
+        `FAIL_UNLESS_EQUAL(request.length, 16)
+
+        tx.cb_read(data, REQUEST_READ_IDS);
+        `FAIL_UNLESS_EQUAL(data.size(), 4)
+        request = {<<8{data}};
+        `FAIL_UNLESS_EQUAL(request.offset, 48)
+        `FAIL_UNLESS_EQUAL(request.length, 15)
     end
     join
 `SVTEST_END

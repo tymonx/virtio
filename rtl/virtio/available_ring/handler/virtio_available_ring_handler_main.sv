@@ -52,13 +52,11 @@ module virtio_available_ring_handler_main #(
             NOTIFICATION_THRESHOLD_HIGH)
     end
 
-    enum logic [2:0] {
+    enum logic [1:0] {
         FSM_IDLE,
         FSM_EVENT_IDX,
-        FSM_READ_IDS,
-        FSM_UPDATE_READ_POINTER,
-        FSM_UPDATE_DIFFERENCE,
-        FSM_UPDATE_IDS
+        FSM_READ_POINTER,
+        FSM_DIFFERENCE
     } fsm_state;
 
     logic read;
@@ -151,7 +149,8 @@ module virtio_available_ring_handler_main #(
         end
     end
 
-    always_comb read = (FSM_UPDATE_IDS == fsm_state) && tx.tready;
+    always_comb read = (FSM_IDLE == fsm_state) && tx.tready &&
+        !(notification && !suppression) && not_empty;
 
     always_ff @(posedge aclk or negedge areset_n) begin
         if (!areset_n) begin
@@ -227,43 +226,25 @@ module virtio_available_ring_handler_main #(
         if (!areset_n) begin
             fsm_state <= FSM_IDLE;
         end
-        else begin
+        else if (tx.tready) begin
             unique case (fsm_state)
             FSM_IDLE: begin
-                if (tx.tready) begin
-                    if (notification && !suppression) begin
-                        if (configuration.event_idx) begin
-                            fsm_state <= FSM_EVENT_IDX;
-                        end
-                        else begin
-                            fsm_state <= FSM_READ_IDS;
-                        end
+                if (notification && !suppression) begin
+                    if (configuration.event_idx) begin
+                        fsm_state <= FSM_EVENT_IDX;
                     end
-                    else if (not_empty) begin
-                        fsm_state <= FSM_UPDATE_READ_POINTER;
-                    end
+                end
+                else if (not_empty) begin
+                    fsm_state <= FSM_READ_POINTER;
                 end
             end
             FSM_EVENT_IDX: begin
-                if (tx.tready) begin
-                    fsm_state <= FSM_READ_IDS;
-                end
+                fsm_state <= FSM_IDLE;
             end
-            FSM_READ_IDS: begin
-                if (not_empty && tx.tready) begin
-                    fsm_state <= FSM_UPDATE_READ_POINTER;
-                end
-                else begin
-                    fsm_state <= FSM_IDLE;
-                end
+            FSM_READ_POINTER: begin
+                fsm_state <= FSM_DIFFERENCE;
             end
-            FSM_UPDATE_READ_POINTER: begin
-                fsm_state <= FSM_UPDATE_DIFFERENCE;
-            end
-            FSM_UPDATE_DIFFERENCE: begin
-                fsm_state <= FSM_UPDATE_IDS;
-            end
-            FSM_UPDATE_IDS: begin
+            default: begin
                 fsm_state <= FSM_IDLE;
             end
             endcase
@@ -273,12 +254,8 @@ module virtio_available_ring_handler_main #(
     always_comb begin
         unique case (fsm_state)
         FSM_IDLE: begin
-            if (notification && !suppression) begin
-                request_type = REQUEST_READ_IDX;
-            end
-            else begin
-                request_type = REQUEST_READ_IDS;
-            end
+            request_type = (notification && !suppression) ?
+                REQUEST_READ_IDX : REQUEST_READ_IDS;
         end
         FSM_EVENT_IDX: begin
             request_type = REQUEST_READ_USED_EVENT;
@@ -305,9 +282,6 @@ module virtio_available_ring_handler_main #(
             end
             FSM_EVENT_IDX: begin
                 tx.tvalid <= 1'b1;
-            end
-            FSM_READ_IDS: begin
-                tx.tvalid <= not_empty;
             end
             default: begin
                 tx.tvalid <= 1'b0;
