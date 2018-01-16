@@ -50,12 +50,6 @@ module virtio_available_ring_handler_main #(
         `LOGIC_DRC_EQUAL_OR_GREATER_THAN(MAX_BURST_TRANSACTIONS, 1)
         `LOGIC_DRC_LESS_THAN(NOTIFICATION_THRESHOLD_LOW,
             NOTIFICATION_THRESHOLD_HIGH)
-        /* Rx */
-        `LOGIC_DRC_EQUAL_OR_GREATER_THAN($bits(rx.tid), $bits(response_type_t))
-        `LOGIC_DRC_EQUAL_OR_GREATER_THAN($bits(rx.tdata), $bits(response_t))
-        /* Tx */
-        `LOGIC_DRC_EQUAL_OR_GREATER_THAN($bits(tx.tid), $bits(request_type_t))
-        `LOGIC_DRC_EQUAL_OR_GREATER_THAN($bits(tx.tdata), $bits(request_t))
     end
 
     enum logic [2:0] {
@@ -92,15 +86,38 @@ module virtio_available_ring_handler_main #(
     request_t request;
     response_t response;
 
-    always_comb rx.tready = 1'b1;
-    always_comb notify.tready = 1'b1;
-    always_comb configure.tready = 1'b1;
-
     always_comb notification_set = notify.tvalid;
     always_comb notification_clear = (FSM_IDLE == fsm_state) &&
         notification && !suppression && tx.tready;
 
     always_comb response = response_t'(rx.tdata);
+
+    always_ff @(posedge aclk or negedge areset_n) begin
+        if (!areset_n) begin
+            rx.tready <= '0;
+        end
+        else begin
+            rx.tready <= '1;
+        end
+    end
+
+    always_ff @(posedge aclk or negedge areset_n) begin
+        if (!areset_n) begin
+            notify.tready <= '0;
+        end
+        else begin
+            notify.tready <= '1;
+        end
+    end
+
+    always_ff @(posedge aclk or negedge areset_n) begin
+        if (!areset_n) begin
+            configure.tready <= '0;
+        end
+        else begin
+            configure.tready <= '1;
+        end
+    end
 
     always_ff @(posedge aclk or negedge areset_n) begin
         if (!areset_n) begin
@@ -116,10 +133,10 @@ module virtio_available_ring_handler_main #(
             notification <= '0;
         end
         else if (notification_set) begin
-            notification <= 1'b1;
+            notification <= '1;
         end
         else if (notification_clear) begin
-            notification <= 1'b0;
+            notification <= '0;
         end
     end
 
@@ -199,10 +216,10 @@ module virtio_available_ring_handler_main #(
             suppression <= '0;
         end
         else if (suppression_set) begin
-            suppression <= 1'b1;
+            suppression <= '1;
         end
         else if (suppression_clear) begin
-            suppression <= 1'b0;
+            suppression <= '0;
         end
     end
 

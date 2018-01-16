@@ -13,11 +13,12 @@
 # limitations under the License.
 
 set(HDL_LIBRARY virtio)
-set(HDL_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/../../logic/rtl/logic/include)
 set(HDL_SYNTHESIZABLE TRUE)
 
+set(HDL_INCLUDES
+    "${STD_OVL_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../logic/rtl/logic/include"
+)
+
 add_subdirectory(packages)
-
-set(HDL_DEPENDS logic_pkg logic_axi4_stream_if)
-
 add_subdirectory(available_ring)

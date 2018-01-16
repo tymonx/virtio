@@ -12,31 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(MODULE_NAME logic_axi4_stream_buffered)
-set(MODULE_TOP ${MODULE_NAME}_top)
-
-add_hdl_systemc(${MODULE_TOP})
-
-get_target_property(MODULE_LIBRARIES ${MODULE_TOP} LIBRARIES)
-get_target_property(MODULE_INCLUDE_DIRS ${MODULE_TOP} INCLUDE_DIRECTORIES)
-
-include_directories(SYSTEM
-    ${MODULE_INCLUDE_DIRS}
-)
-
-set(MODULE_NAME_TEST ${MODULE_NAME}_test)
-
-add_executable(${MODULE_NAME_TEST}
-    main.cpp
-    test.cpp
-)
-
-add_test(NAME ${MODULE_NAME_TEST}
-    COMMAND ${MODULE_NAME_TEST}
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/output
-)
-
-target_link_libraries(${MODULE_NAME_TEST}
-    logic
-    ${MODULE_LIBRARIES}
+add_hdl_unit_test(virtio_available_ring_handler_unit_test.sv
+    DEPENDS
+        virtio_available_ring_pkg
+        virtio_available_ring_handler
 )

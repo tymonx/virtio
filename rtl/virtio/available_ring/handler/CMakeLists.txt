@@ -12,18 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_hdl_source(virtio_available_ring_handler_main.sv
-    DEPENDS
-        virtio_available_ring_pkg
-)
-
 add_hdl_source(virtio_available_ring_handler.sv
+    SOURCES
+        virtio_available_ring_handler_main.sv
     DEPENDS
+        logic_axi4_stream_if
         logic_reset_synchronizer
-        virtio_available_ring_handler_main
+        virtio_available_ring_pkg
 )
 
 add_hdl_source(virtio_available_ring_handler_top.sv
     DEPENDS
         virtio_available_ring_handler
+    ANALYSIS
+        TRUE
 )

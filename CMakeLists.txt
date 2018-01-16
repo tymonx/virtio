@@ -16,28 +16,10 @@ cmake_minimum_required(VERSION 3.1)
 project(Virtio CXX)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
-    ${CMAKE_CURRENT_LIST_DIR}/cmake
     ${CMAKE_CURRENT_LIST_DIR}/logic/cmake
 )
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-
-include(AddThreads)
-include(AddGnuCompiler)
-include(AddMsvcCompiler)
-include(AddClangCompiler)
-include(AddQuartusProject)
-include(AddHDL)
-
-find_package(SVUnit)
-find_package(ModelSim)
-find_package(NaturalDocs)
-find_package(SystemC REQUIRED COMPONENTS SCV UVM)
-find_package(Verilator REQUIRED)
-find_package(Quartus REQUIRED)
-find_package(GTest)
+include(AddLogic)
 
 enable_testing()
 
