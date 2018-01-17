@@ -49,7 +49,7 @@ module virtio_available_ring_monitor #(
 
     localparam int OFFSET = MAX_DESCRIPTOR_INDEXES - 1;
     localparam int CAPACITY_WIDTH = ADDRESS_WIDTH + 1;
-    localparam int ALMOST_FULL = CAPACITY - 2;
+    localparam int ALMOST_FULL = CAPACITY - 1;
 
     initial begin: design_rule_checks
         `LOGIC_DRC_POWER_OF_2(CAPACITY)
