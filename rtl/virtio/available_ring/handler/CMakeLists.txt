@@ -13,8 +13,6 @@
 # limitations under the License.
 
 add_hdl_source(virtio_available_ring_handler.sv
-    SOURCES
-        virtio_available_ring_handler_main.sv
     DEPENDS
         logic_axi4_stream_if
         logic_reset_synchronizer

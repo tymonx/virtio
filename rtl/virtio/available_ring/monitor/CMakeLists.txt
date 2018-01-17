@@ -12,5 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_subdirectory(handler)
-add_subdirectory(monitor)
+add_hdl_source(virtio_available_ring_monitor.sv
+    DEPENDS
+        logic_axi4_stream_if
+        logic_reset_synchronizer
+        virtio_available_ring_pkg
+)
+
+add_hdl_source(virtio_available_ring_monitor_top.sv
+    DEPENDS
+        virtio_available_ring_monitor
+    ANALYSIS
+        TRUE
+)
