@@ -27,10 +27,10 @@
  * Ports:
  *  aclk        - Clock.
  *  areset_n    - Asynchronous active-low reset.
- *  configure   - AXI4-Stream interface for virtqueue configuration.
- *  notify      - AXI4-Stream interface for virtqueue notification.
- *  rx          - AXI4-Stream interface for virtqueue responses.
- *  tx          - AXI4-Stream interface for virtqueue requests.
+ *  configure   - AXI4-Stream Rx interface for virtqueue configuration.
+ *  notify      - AXI4-Stream Rx interface for virtqueue notification.
+ *  rx          - AXI4-Stream Rx interface for virtqueue responses.
+ *  tx          - AXI4-Stream Tx interface for virtqueue requests.
  */
 module virtio_available_ring_handler #(
     int MAX_BURST_TRANSACTIONS = 16,

@@ -32,7 +32,7 @@ package virtio_available_ring_pkg;
      *
      * Request type.
      *
-     * REQUEST_READ_IDS         - Request type to read descriptor IDs from
+     * REQUEST_READ_RING        - Request type to read descriptor indexes from
      *                            available ring.
      * REQUEST_READ_IDX         - Request type to read idx field from
      *                            available ring.
@@ -40,7 +40,7 @@ package virtio_available_ring_pkg;
      *                            available ring.
      */
     typedef enum logic [1:0] {
-        REQUEST_READ_IDS,
+        REQUEST_READ_RING,
         REQUEST_READ_IDX,
         REQUEST_READ_USED_EVENT
     } request_type_t;
@@ -49,7 +49,7 @@ package virtio_available_ring_pkg;
      *
      * Request data.
      *
-     * length   - Number of descriptor IDs to read from available ring.
+     * length   - Number of descriptor indexes to read from available ring.
      * offset   - Index offset from available ring base address.
      */
     typedef struct packed {

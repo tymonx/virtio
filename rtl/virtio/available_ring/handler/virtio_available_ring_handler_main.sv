@@ -255,13 +255,13 @@ module virtio_available_ring_handler_main #(
         unique case (fsm_state)
         FSM_IDLE: begin
             request_type = (notification && !suppression) ?
-                REQUEST_READ_IDX : REQUEST_READ_IDS;
+                REQUEST_READ_IDX : REQUEST_READ_RING;
         end
         FSM_EVENT_IDX: begin
             request_type = REQUEST_READ_USED_EVENT;
         end
         default: begin
-            request_type = REQUEST_READ_IDS;
+            request_type = REQUEST_READ_RING;
         end
         endcase
     end

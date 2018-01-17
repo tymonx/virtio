@@ -98,13 +98,13 @@ module virtio_available_ring_handler_unit_test;
         data = new [2] ('{16'd63});
         rx.cb_write(data);
 
-        tx.cb_read(data, REQUEST_READ_IDS);
+        tx.cb_read(data, REQUEST_READ_RING);
         `FAIL_UNLESS_EQUAL(data.size(), 4)
         request = {<<8{data}};
         `FAIL_UNLESS_EQUAL(request.offset, 0)
         `FAIL_UNLESS_EQUAL(request.length, 16)
 
-        tx.cb_read(data, REQUEST_READ_IDS);
+        tx.cb_read(data, REQUEST_READ_RING);
         `FAIL_UNLESS_EQUAL(data.size(), 4)
         request = {<<8{data}};
         `FAIL_UNLESS_EQUAL(request.offset, 16)
@@ -113,13 +113,13 @@ module virtio_available_ring_handler_unit_test;
         data = new [1];
         notify.cb_write(data);
 
-        tx.cb_read(data, REQUEST_READ_IDS);
+        tx.cb_read(data, REQUEST_READ_RING);
         `FAIL_UNLESS_EQUAL(data.size(), 4)
         request = {<<8{data}};
         `FAIL_UNLESS_EQUAL(request.offset, 32)
         `FAIL_UNLESS_EQUAL(request.length, 16)
 
-        tx.cb_read(data, REQUEST_READ_IDS);
+        tx.cb_read(data, REQUEST_READ_RING);
         `FAIL_UNLESS_EQUAL(data.size(), 4)
         request = {<<8{data}};
         `FAIL_UNLESS_EQUAL(request.offset, 48)
